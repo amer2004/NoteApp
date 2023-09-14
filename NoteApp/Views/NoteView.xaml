@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:NoteApp.ViewModels"
+             x:Class="NoteApp.Views.NoteView">
+    <ContentView.BindingContext>
+        <viewmodels:NoteViewModel/>
+    </ContentView.BindingContext>
+    <VerticalStackLayout Padding="10">
+       
+            <VerticalStackLayout Padding="10">
+                <Label Text="Note Title"
+                       HorizontalOptions="Start"/>
+          
+                <Entry Placeholder="Enter Note Title" Text="{Binding NoteTitle}"/>
+                
+                <Label Text="Note Description" 
+                       HorizontalOptions="Start"/>
+                
+                <Editor HeightRequest="200" 
+                        Placeholder="Enter Note Description"
+                        Text="{Binding NoteDescription}"/>
+                <Button Command="{Binding AddNoteCommand}" Text="Add Note"/>
+
+            </VerticalStackLayout>
+        
+        <ListView ItemsSource="{Binding NotesCollection}" SelectedItem="{Binding SelectedNote}">
+            
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Title}" Detail="{Binding Description}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+        </ListView>
+       
+        
+        <HorizontalStackLayout Spacing="5" Padding="10">
+            <Button Text="Remove Note" Command="{Binding RemoveNoteCommand}"/>
+            
+            <Button Text="Edit Note" Command="{Binding EditNoteCommand}"/>
+        </HorizontalStackLayout>
+        
+    </VerticalStackLayout>
+</ContentView>
