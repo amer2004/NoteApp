@@ -17,9 +17,5 @@ namespace NoteApp.DataBase
             var filename = Path.Combine(path, "NoteAppDB.db");
             optionsBuilder.UseSqlite($"FileName={filename}");
         }
-        public DataBaseContext()
-        {
-
-        }
     }
 }
