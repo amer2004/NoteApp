@@ -1,10 +1,20 @@
+using NoteApp.ViewModels;
+
 namespace NoteApp.Views;
 
 public partial class NoteView : ContentView
 {
-	public NoteView()
+    private readonly NoteViewModel model;
+
+    public NoteView(NoteViewModel model)
 	{
 		InitializeComponent();
-		BindingContext=new ViewModels.NoteViewModel();
-	}
+		BindingContext = model;
+        this.model = model;
+    }
+
+    private void NoteList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+        model.SetData();
+    }
 }

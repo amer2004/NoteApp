@@ -17,14 +17,14 @@
                 <Label Text="Note Description" 
                        HorizontalOptions="Start"/>
                 
-                <Editor HeightRequest="200" 
+                <Editor HeightRequest="100" 
                         Placeholder="Enter Note Description"
                         Text="{Binding NoteDescription}"/>
                 <Button Command="{Binding AddNoteCommand}" Text="Add Note"/>
 
             </VerticalStackLayout>
         
-        <ListView ItemsSource="{Binding NotesCollection}" SelectedItem="{Binding SelectedNote}">
+        <ListView x:Name="NoteList" ItemSelected="NoteList_ItemSelected" ItemsSource="{Binding NotesCollection}" SelectedItem="{Binding SelectedNote}">
             
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -34,11 +34,10 @@
             
         </ListView>
        
-        
-        <HorizontalStackLayout Spacing="5" Padding="10">
+        <HorizontalStackLayout Spacing="5" Padding="10" VerticalOptions="End">
             <Button Text="Remove Note" Command="{Binding RemoveNoteCommand}"/>
-            
             <Button Text="Edit Note" Command="{Binding EditNoteCommand}"/>
+            <Button/>
         </HorizontalStackLayout>
         
     </VerticalStackLayout>

@@ -54,13 +54,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="..\..\..\..\OneDrive\الصور\icons\GoodNotes.svg">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	</ItemGroup>
-
-	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.11" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 	</ItemGroup>
 
@@ -68,6 +64,10 @@
 	  <MauiXaml Update="Views\NoteView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="class\" />
 	</ItemGroup>
 
 </Project>

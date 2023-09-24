@@ -2,124 +2,91 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using NoteApp.DataBase;
 
 namespace NoteApp.ViewModels
 {
-    public partial class NoteViewModel : INotifyPropertyChanged
+    public partial class NoteViewModel :ObservableObject
     {
-        private string _noteTitle;
-        private string _noteDescription;
-        private Note _selectedNote;
+        DataBaseContext db;
 
+        [ObservableProperty]
+         string noteTitle;
 
-        public ObservableCollection<Note> NotesCollection { get; set; }
-        public ICommand AddNoteCommand { get;}
-        public ICommand EditNoteCommand { get; }
-        public ICommand RemoveNoteCommand { get; }
+        [ObservableProperty]
+         string noteDescription;
 
+        [ObservableProperty]
+         Note selectedNote;
+
+        [ObservableProperty]
+         ObservableCollection<Note> notesCollection;
+        NoteEntity DataHelper;
+  
         public NoteViewModel()
         {
-            NotesCollection = new ObservableCollection<Note>();
-            AddNoteCommand = new Command(AddNote);
-            EditNoteCommand = new Command(EditNote);
-            RemoveNoteCommand = new Command(RemoveNote);
+            notesCollection = new ObservableCollection<Note>();
+            DataHelper= new NoteEntity();
+            LoadData();
         }
 
-        private void RemoveNote(object obj)
+        [RelayCommand]
+        private async void RemoveNote(object obj)
         {
             if(SelectedNote != null)
             {
-                NotesCollection.Remove(SelectedNote);
+                await  DataHelper.RemoveDataAsync(SelectedNote);
+                LoadData();
                 NoteTitle = string.Empty;
                 NoteDescription = string.Empty;
             }
         }
-
-        private void EditNote(object obj)
+        [RelayCommand]
+        private async void EditNote(object obj)
         {
             if (SelectedNote != null)
-            {
-                foreach(Note note in NotesCollection.ToList()) 
+            {               
+                Note newNote = new Note
                 {
-                    if (note==SelectedNote)
-                    {
-                        Note newNote = new Note
-                        {
-                            Id = note.Id,
+                            Id = SelectedNote.Id,
                             Title=NoteTitle,
                             Description=NoteDescription
-                        };
-                        NotesCollection.Remove(note);
-                        NotesCollection.Insert(newNote.Id,newNote);
-                        NoteTitle = string.Empty;
-                        NoteDescription = string.Empty;
-                    }
-                }
+                };
+                await DataHelper.UpdateDataAsync(newNote);
+                LoadData();
             }
         }
-
-        private void AddNote(object obj)
-        {
-            int newid = NotesCollection.Count > 0 ? NotesCollection.Max(p => p.Id) + 1 : 0;
+        [RelayCommand]
+        private async void AddNote(object obj)
+        {         
             var note =new Note
-            { 
-                Id = newid,
+            {      
                 Title = NoteTitle,
                 Description = NoteDescription,
             };
-            NotesCollection.Add(note);
+            await DataHelper.AddDataAsync(note);
+            LoadData();
             NoteTitle=string.Empty;
             NoteDescription=string.Empty;
         }
-
-        public string NoteTitle
+        public void SetData()
         {
-            get { return _noteTitle; }
-            set 
-            {
-                if(_noteTitle!=value)
-                {
-                    _noteTitle = value;
-                    onPropertyChanged();
-                }
-            }
+            NoteTitle = SelectedNote.Title;
+            NoteDescription = SelectedNote.Description;
         }
-        public string NoteDescription
+        public async void LoadData()
         {
-            get { return _noteDescription; }
-            set
+            NotesCollection.Clear();
+            foreach (var note in await DataHelper.GetAllAsync())
             {
-                if (_noteDescription != value)
-                {
-                    _noteDescription = value;
-                    onPropertyChanged();
-                }
+                NotesCollection.Add(note);
             }
-        }
-        public Note SelectedNote
-        {
-            get { return _selectedNote; }
-            set
-            {
-                if ( _selectedNote != value)
-                {
-                    _selectedNote = value;
-                    NoteTitle=SelectedNote.Title;
-                    NoteDescription=SelectedNote.Description;
-                    onPropertyChanged();
-                }
-            }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void onPropertyChanged([CallerMemberName] string propertyName=null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
