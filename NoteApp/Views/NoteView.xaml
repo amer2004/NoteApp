@@ -37,7 +37,7 @@
         <HorizontalStackLayout Spacing="5" Padding="10" VerticalOptions="End">
             <Button Text="Remove Note" Command="{Binding RemoveNoteCommand}"/>
             <Button Text="Edit Note" Command="{Binding EditNoteCommand}"/>
-            <Button/>
+
         </HorizontalStackLayout>
         
     </VerticalStackLayout>
